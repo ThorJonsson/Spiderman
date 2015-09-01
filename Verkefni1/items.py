@@ -11,7 +11,7 @@ import scrapy
 class KsiItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
-    player = scrapy.Field()
+    name = scrapy.Field()
     year = scrapy.Field()
     link = scrapy.Field()
     flokkur = scrapy.Field()
