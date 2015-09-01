@@ -40,7 +40,7 @@ class CrawlerWorker():
 
 
 
-def get_team_ages(team_code, gender, min_age=18):
+def get_team_data(team_code, gender, min_age=18):
 	# crawls ksi.is and finds the the number of registered matches at
 	# each youth level (level 4,3 and 2)
 	# returns a vector of ints
@@ -80,12 +80,19 @@ if __name__ == "__main__":
 	# ignores players born later than minimum_age
 
 	# parameters:
-	teams = {'KR': '112'}
-	KRitem = get_team_ages(teams['KR'], gender = 'other')
+	teams = {'KR': '900'}
+        # Start the spider
+	KRitem = get_team_data(teams['KR'], gender = 'other')
+	# We list all the youth divisions as we iterate through each
+	# player. Then we make a histogram of the frequencies for each
+	# youth level.
 	flokkur_list = []
 	temp_player = 'name'
-	#pdb.set_trace()
 	for player in KRitem:
+            # We say that a player has gone through the youth ranks if
+            # it has ever been registered for the team in the youth
+            # ranks, otherwise if he has only games for the first team
+            # then we say that he is bought.
             uppalinn = False
 	    print player
             if '4. flokkur' in player['flokkur']:
@@ -102,14 +109,18 @@ if __name__ == "__main__":
             elif 'Meistaraflokkur' in player['flokkur']:
                 flokkur_list.append(u'Meistaraflokkur - aðkeyptur')
 
+        # The counter registers the frequencies for different youth
+        # levels.
         cnt = Counter(flokkur_list)
         flokkur_names = cnt.keys()
         flokkur_counts = cnt.values()
-# Plot histogram using matplotlib bar().
+        # Plot histogram using matplotlib bar().
         indexes = np.arange(len(flokkur_names))
-        width = 0.7
+        width = 0.3
         plt.bar(indexes, flokkur_counts, width)
         plt.xticks(indexes + width * 0.5, flokkur_names)
+        plt.ylabel('Number of players')
+        plt.title(u'Number of players in different ranks - ÍBV')
         plt.show()
 
 
